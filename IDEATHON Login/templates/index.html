@@ -1,0 +1,1157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Union Bank of India - Secure & Seamless Banking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        'union-red': '#E30613',
+                        'union-blue': '#002B5C',
+                        'union-white': '#FFFFFF',
+                        'union-gray': '#F5F5F5',
+                        'union-dark': '#1A1A1A',
+                    },
+                    backgroundImage: {
+                        'hero-pattern': "url('https://ik.imagekit.io/pibjyepn7p9/Blade-Runner_95YIwQPc3.jpg')",
+                        'login-bg': "url('https://images.pexels.com/photos/8370752/pexels-photo-8370752.jpeg')",
+                        'signup-bg': "url('https://images.pexels.com/photos/7135121/pexels-photo-7135121.jpeg')",
+                        'otp-bg': "url('https://images.pexels.com/photos/6963944/pexels-photo-6963944.jpeg')",
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .glass-effect {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            animation: fadeInScale 0.6s ease-out;
+        }
+        
+        /* Enhanced Animation Keyframes */
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.8) translateY(30px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes slideInRotate {
+            0% { transform: translateX(-100%) rotate(-5deg); opacity: 0; }
+            100% { transform: translateX(0) rotate(0); opacity: 1; }
+        }
+
+        @keyframes floatShadow {
+            0% { transform: translateY(0); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+            50% { transform: translateY(-15px); box-shadow: 0 25px 15px rgba(0,0,0,0.1); }
+            100% { transform: translateY(0); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        }
+
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 5px rgba(227, 6, 19, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(227, 6, 19, 0.6); }
+            100% { box-shadow: 0 0 5px rgba(227, 6, 19, 0.2); }
+        }
+
+        @keyframes morphBackground {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Enhanced Input Animation */
+        .input-focus-effect {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 2px solid transparent;
+        }
+        .input-focus-effect:focus {
+            border-color: #E30613;
+            transform: scale(1.02) translateY(-2px);
+            box-shadow: 0 10px 25px rgba(227, 6, 19, 0.2);
+        }
+
+        /* Enhanced Button Animations */
+        .gradient-button {
+            background: linear-gradient(-45deg, #E30613, #002B5C, #E30613, #002B5C);
+            background-size: 400% 400%;
+            animation: morphBackground 15s ease infinite;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        .gradient-button:hover {
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 20px 30px rgba(227, 6, 19, 0.3);
+        }
+        .gradient-button:active {
+            transform: translateY(1px);
+        }
+
+        /* Enhanced Card Hover Effects */
+        .hover-float {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: floatShadow 6s ease-in-out infinite;
+        }
+        .hover-float:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 30px 40px rgba(0,0,0,0.3);
+        }
+
+        /* Enhanced Form Field Animation */
+        .form-field-animation {
+            animation: slideInRotate 0.6s ease-out;
+        }
+
+        /* Enhanced Icon Animation */
+        .icon-pulse {
+            animation: glowPulse 2s infinite;
+        }
+
+        /* Section Transitions */
+        .section {
+            transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .section.hidden {
+            opacity: 0;
+            transform: translateY(30px) scale(0.95);
+        }
+        .section:not(.hidden) {
+            animation: fadeInScale 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Enhanced Progress Bar Animation */
+        .progress-animation {
+            background: linear-gradient(-45deg, #E30613, #002B5C, #E30613, #002B5C);
+            background-size: 400% 400%;
+            animation: morphBackground 8s ease infinite;
+        }
+
+        .section-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(0, 43, 92, 0.7), rgba(227, 6, 19, 0.7));
+            z-index: 1;
+            animation: morphBackground 15s ease infinite;
+        }
+
+        /* Input Animation */
+        .input-focus-effect {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .input-focus-effect:focus {
+            border-color: #E30613;
+            transform: scale(1.02);
+            box-shadow: 0 0 15px rgba(227, 6, 19, 0.2);
+        }
+
+        /* Button Animations */
+        .gradient-button {
+            background: linear-gradient(135deg, #E30613 0%, #002B5C 100%);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .gradient-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(227, 6, 19, 0.3);
+        }
+        .gradient-button:after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 3s infinite;
+        }
+
+        /* Section Transitions */
+        .section {
+            transition: all 0.5s ease-in-out;
+        }
+        .section.hidden {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        .section:not(.hidden) {
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        /* Card Hover Effects */
+        .hover-float {
+            transition: all 0.3s ease;
+        }
+        .hover-float:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Progress Bar Animation */
+        .progress-animation {
+            background: linear-gradient(90deg, #E30613, #002B5C);
+            background-size: 200% 100%;
+            animation: gradientMove 2s linear infinite;
+        }
+        @keyframes gradientMove {
+            0% { background-position: 100% 0%; }
+            100% { background-position: -100% 0%; }
+        }
+
+        /* Form Field Animation */
+        .form-field-animation {
+            animation: slideUp 0.5s ease-out;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* Icon Pulse Animation */
+        .icon-pulse {
+            animation: iconPulse 2s infinite;
+        }
+        @keyframes iconPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        /* Add animation classes to existing elements */
+        .glass-effect { animation: scaleIn 0.5s ease-out; }
+        .section-content { animation: fadeIn 0.7s ease-out; }
+        input, select { @apply input-focus-effect; }
+        .fas { @apply icon-pulse; }
+        #signupProgress { @apply progress-animation; }
+        .glass-effect { @apply hover-float; }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        .section-bg {
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+        }
+        .section-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1;
+        }
+        .section-content {
+            position: relative;
+            z-index: 2;
+        }
+    </style>
+</head>
+<body class="bg-union-gray dark:bg-union-dark min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-union-white dark:bg-union-dark shadow-lg fixed w-full z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2OYyn7CMzfYoIHYYW2KSQqNBrEpwxhK8ARQ&s" alt="Union Bank of India" class="h-12">
+                </div>
+                <div class="flex items-center space-x-4">
+                    <button id="darkModeToggle" class="p-2 rounded-lg hover:bg-union-gray dark:hover:bg-gray-700">
+                        <i class="fas fa-moon dark:hidden text-union-blue"></i>
+                        <i class="fas fa-sun hidden dark:block text-yellow-400"></i>
+                    </button>
+                    <button id="loginTabBtn" class="text-union-blue dark:text-union-white hover:text-union-red dark:hover:text-union-red">Login</button>
+                    <button id="signupTabBtn" class="gradient-button text-white px-4 py-2 rounded-lg">Sign Up</button>
+                    <button id="dashboardTabBtn" class="hidden text-union-blue dark:text-union-white hover:text-union-red dark:hover:text-union-red">Dashboard</button>
+                    <button id="logoutBtn" class="hidden text-union-red hover:text-red-700 dark:text-red-400 dark:hover:text-red-300">
+                        <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pt-16">
+        <!-- Home Section -->
+        <div id="homeSection" class="section">
+            <!-- Hero Section -->
+            <div class="relative bg-hero-pattern bg-cover bg-center h-[600px] flex items-center">
+                <div class="absolute inset-0 bg-black bg-opacity-50"></div>
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="text-center">
+                        <h1 class="text-5xl font-bold text-white mb-6 animate-fade-in">
+                            Welcome to Union Bank of India
+                        </h1>
+                        <p class="text-xl text-white mb-8">
+                            Secure & Seamless Banking Experience
+                        </p>
+                        <div class="space-x-4">
+                            <button id="loginFromHomeBtn" class="gradient-button text-white px-8 py-3 rounded-lg pulse">
+                                Get Started
+                            </button>
+                            <a href="#features" class="bg-white text-union-blue px-8 py-3 rounded-lg hover:bg-union-gray transition-colors">
+                                Learn More
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div id="features" class="py-20 bg-union-white dark:bg-union-dark">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div class="glass-effect p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                            <i class="fas fa-clock text-3xl text-union-red mb-4"></i>
+                            <h3 class="text-xl font-semibold text-union-blue dark:text-white mb-2">24/7 Digital Banking</h3>
+                            <p class="text-gray-600 dark:text-gray-300">Access your account anytime, anywhere with our digital banking services</p>
+                        </div>
+                        <div class="glass-effect p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                            <i class="fas fa-shield-alt text-3xl text-union-red mb-4"></i>
+                            <h3 class="text-xl font-semibold text-union-blue dark:text-white mb-2">Secure Transactions</h3>
+                            <p class="text-gray-600 dark:text-gray-300">State-of-the-art security measures to protect your assets</p>
+                        </div>
+                        <div class="glass-effect p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
+                            <i class="fas fa-mobile-alt text-3xl text-union-red mb-4"></i>
+                            <h3 class="text-xl font-semibold text-union-blue dark:text-white mb-2">Mobile-Friendly Experience</h3>
+                            <p class="text-gray-600 dark:text-gray-300">Seamless banking experience across all your devices</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Access Links -->
+            <div class="py-20 bg-union-gray dark:bg-gray-900">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <a href="#" class="glass-effect p-6 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                            <i class="fas fa-user-plus text-3xl text-union-red mb-4"></i>
+                            <h3 class="text-xl font-semibold text-union-blue dark:text-white mb-2">Open an Account</h3>
+                            <p class="text-gray-600 dark:text-gray-300">Start your banking journey with us</p>
+                        </a>
+                        <a href="#" class="glass-effect p-6 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                            <i class="fas fa-hand-holding-usd text-3xl text-union-red mb-4"></i>
+                            <h3 class="text-xl font-semibold text-union-blue dark:text-white mb-2">Loan Services</h3>
+                            <p class="text-gray-600 dark:text-gray-300">Explore our range of loan products</p>
+                        </a>
+                        <a href="#" class="glass-effect p-6 rounded-lg shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                            <i class="fas fa-headset text-3xl text-union-red mb-4"></i>
+                            <h3 class="text-xl font-semibold text-union-blue dark:text-white mb-2">Customer Support</h3>
+                            <p class="text-gray-600 dark:text-gray-300">24/7 assistance for all your queries</p>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Section -->
+        <div id="loginSection" class="section hidden">
+            <div class="min-h-screen section-bg bg-login-bg flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-md w-full space-y-8 section-content">
+                    <div class="glass-effect rounded-lg shadow-lg p-8">
+                        <div class="text-center">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2OYyn7CMzfYoIHYYW2KSQqNBrEpwxhK8ARQ&s" alt="Union Bank of India" class="mx-auto h-16 mb-6">
+                            <h2 class="text-2xl font-bold text-union-blue dark:text-white">Login to Your Account</h2>
+                        </div>
+                        
+                        <form id="loginForm" class="mt-8 space-y-6">
+                            <!-- Email/Phone Input -->
+                            <div>
+                                <label for="emailPhone" class="block text-sm font-medium text-union-blue dark:text-white">Email</label>
+                                <div class="mt-1 relative">
+                                    <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                    <input type="email" id="emailPhone" name="emailPhone" required
+                                        class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-union-red focus:border-union-red dark:bg-gray-700 dark:text-white">
+                                </div>
+                            </div>
+
+                            <!-- Password Input -->
+                            <div>
+                                <label for="loginPassword" class="block text-sm font-medium text-union-blue dark:text-white">Password</label>
+                                <div class="mt-1 relative">
+                                    <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                    <input type="password" id="loginPassword" name="loginPassword" required
+                                        class="appearance-none block w-full pl-10 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-union-red focus:border-union-red dark:bg-gray-700 dark:text-white">
+                                    <button type="button" id="toggleLoginPassword" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                        <i class="fas fa-eye text-gray-400 hover:text-union-red"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- PIN Input -->
+                            <div>
+                                <label for="pin" class="block text-sm font-medium text-union-blue dark:text-white">4-Digit PIN</label>
+                                <div class="mt-1 relative">
+                                    <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                    <input type="password" id="pin" name="pin" maxlength="4" pattern="[0-9]{4}" required
+                                        class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-union-red focus:border-union-red dark:bg-gray-700 dark:text-white text-center text-2xl tracking-widest">
+                                </div>
+                            </div>
+
+                            <!-- Forgot Password Link -->
+                            <div class="flex items-center justify-between">
+                                <a href="#" class="text-sm text-union-red hover:text-red-700">
+                                    Forgot Password?
+                                </a>
+                            </div>
+
+                            <!-- Login Button -->
+                            <div>
+                                <button type="submit"
+                                    class="gradient-button w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-union-red">
+                                    Login
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Sign Up Link -->
+                        <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+                            Don't have an account?
+                            <button id="signupFromLoginBtn" class="font-medium text-union-red hover:text-red-700">
+                                Sign up
+                            </button>
+                        </p>
+                    </div>
+
+                    <!-- Security Notice -->
+                    <div class="text-center text-sm text-gray-600 dark:text-gray-400">
+                        <i class="fas fa-shield-alt mr-2"></i>
+                        Your security is our top priority. All transactions are encrypted and secure.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Signup Section -->
+        <div id="signupSection" class="section hidden">
+            <div class="min-h-screen section-bg bg-signup-bg flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-2xl w-full section-content">
+                    <div class="glass-effect rounded-lg shadow-lg p-8">
+                        <div class="text-center mb-8">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2OYyn7CMzfYoIHYYW2KSQqNBrEpwxhK8ARQ&s" alt="Union Bank of India" class="mx-auto h-16 mb-4">
+                            <h2 class="text-2xl font-bold text-union-blue dark:text-white">Create Your Account</h2>
+                            <div class="mt-4">
+                                <div class="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700">
+                                    <div id="signupProgress" class="bg-union-red h-2.5 rounded-full" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <form id="signupForm" class="space-y-6">
+                            <!-- Personal Details -->
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-union-blue dark:text-white">Personal Details</h3>
+                                <div>
+                                    <label for="username" class="block text-sm font-medium text-union-blue dark:text-white">Full Name</label>
+                                    <div class="mt-1 relative">
+                                        <i class="fas fa-user absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                        <input type="text" id="username" name="username" required
+                                            class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-union-red focus:border-union-red dark:bg-gray-700 dark:text-white">
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="dob" class="block text-sm font-medium text-union-blue dark:text-white">Date of Birth</label>
+                                        <div class="mt-1 relative">
+                                            <i class="fas fa-calendar absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                            <input type="date" id="dob" name="dob" required
+                                                class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-union-red focus:border-union-red dark:bg-gray-700 dark:text-white">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="nationality" class="block text-sm font-medium text-union-blue dark:text-white">Nationality</label>
+                                        <div class="mt-1 relative">
+                                            <i class="fas fa-globe absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                            <input type="text" id="nationality" name="nationality" required
+                                                class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-union-red focus:border-union-red dark:bg-gray-700 dark:text-white">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Contact Information -->
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-union-blue dark:text-white">Contact Information</h3>
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-union-blue dark:text-white">Email</label>
+                                    <div class="mt-1 relative">
+                                        <i class="fas fa-envelope absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                        <input type="email" id="email" name="email" required
+                                            class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-union-red focus:border-union-red dark:bg-gray-700 dark:text-white">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="phone" class="block text-sm font-medium text-union-blue dark:text-white">Phone Number</label>
+                                    <div class="mt-1 relative">
+                                        <i class="fas fa-phone absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                        <input type="tel" id="phone" name="phone" pattern="[0-9]{10}" required
+                                            class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-union-red focus:border-union-red dark:bg-gray-700 dark:text-white">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Password Setup -->
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-union-blue dark:text-white">Password Setup</h3>
+                                <div>
+                                    <label for="signupPassword" class="block text-sm font-medium text-union-blue dark:text-white">Password</label>
+                                    <div class="mt-1 relative">
+                                        <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                        <input type="password" id="signupPassword" name="signupPassword" required
+                                            class="appearance-none block w-full pl-10 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-union-red focus:border-union-red dark:bg-gray-700 dark:text-white">
+                                        <button type="button" id="toggleSignupPassword" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                            <i class="fas fa-eye text-gray-400 hover:text-union-red"></i>
+                                        </button>
+                                    </div>
+                                    <div class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                        Password must contain:
+                                        <ul class="list-disc list-inside">
+                                            <li id="lengthCheck" class="text-red-500">At least 8 characters</li>
+                                            <li id="uppercaseCheck" class="text-red-500">One uppercase letter</li>
+                                            <li id="lowercaseCheck" class="text-red-500">One lowercase letter</li>
+                                            <li id="numberCheck" class="text-red-500">One number</li>
+                                            <li id="specialCheck" class="text-red-500">One special character (!@#$%^&*)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label for="confirmPassword" class="block text-sm font-medium text-union-blue dark:text-white">Confirm Password</label>
+                                    <div class="mt-1 relative">
+                                        <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                        <input type="password" id="confirmPassword" name="confirmPassword" required
+                                            class="appearance-none block w-full pl-10 pr-10 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-union-red focus:border-union-red dark:bg-gray-700 dark:text-white">
+                                        <button type="button" id="toggleConfirmPassword" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                                            <i class="fas fa-eye text-gray-400 hover:text-union-red"></i>
+                                        </button>
+                                    </div>
+                                    <p id="passwordMatchMessage" class="mt-1 text-sm"></p>
+                                </div>
+                            </div>
+
+                            <!-- Identity Verification -->
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-union-blue dark:text-white">Identity Verification</h3>
+                                <div>
+                                    <label for="pan" class="block text-sm font-medium text-union-blue dark:text-white">PAN Card Number</label>
+                                    <div class="mt-1 relative">
+                                        <i class="fas fa-id-card absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                        <input type="text" id="pan" name="pan" pattern="[A-Z]{5}[0-9]{4}[A-Z]{1}" required
+                                            class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-union-red focus:border-union-red dark:bg-gray-700 dark:text-white uppercase">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Address -->
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-union-blue dark:text-white">Address</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div>
+                                        <label for="city" class="block text-sm font-medium text-union-blue dark:text-white">City</label>
+                                        <div class="mt-1 relative">
+                                            <i class="fas fa-city absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                            <input type="text" id="city" name="city" required
+                                                class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-union-red focus:border-union-red dark:bg-gray-700 dark:text-white">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label for="pincode" class="block text-sm font-medium text-union-blue dark:text-white">Pincode</label>
+                                        <div class="mt-1 relative">
+                                            <i class="fas fa-map-marker-alt absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                            <input type="text" id="pincode" name="pincode" pattern="[0-9]{6}" required
+                                                class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-union-red focus:border-union-red dark:bg-gray-700 dark:text-white">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- PIN Input -->
+                            <div class="space-y-4">
+                                <h3 class="text-lg font-semibold text-union-blue dark:text-white">Security</h3>
+                                <div>
+                                    <label for="pin" class="block text-sm font-medium text-union-blue dark:text-white">Set 4-Digit PIN</label>
+                                    <div class="mt-1 relative">
+                                        <i class="fas fa-lock absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                        <input type="password" 
+                                               id="pin" 
+                                               name="pin" 
+                                               maxlength="4"
+                                               pattern="[0-9]{4}"
+                                               title="Please enter exactly 4 digits"
+                                               required
+                                               class="appearance-none block w-full pl-10 pr-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-union-red focus:border-union-red dark:bg-gray-700 dark:text-white text-center text-2xl tracking-widest">
+                                    </div>
+                                    <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">Enter exactly 4 digits (0-9)</p>
+                                </div>
+                            </div>
+
+                            <!-- Submit Button -->
+                            <div>
+                                <button type="submit"
+                                    class="gradient-button w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-union-red">
+                                    Create Account
+                                </button>
+                            </div>
+                        </form>
+
+                        <!-- Login Link -->
+                        <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
+                            Already have an account?
+                            <button id="loginFromSignupBtn" class="font-medium text-union-red hover:text-red-700">
+                                Login
+                            </button>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- OTP Section -->
+        <div id="otpSection" class="section hidden">
+            <div class="min-h-screen section-bg bg-otp-bg flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+                <div class="max-w-md w-full section-content">
+                    <div class="glass-effect rounded-lg shadow-lg p-8">
+                        <div class="text-center mb-8">
+                            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT2OYyn7CMzfYoIHYYW2KSQqNBrEpwxhK8ARQ&s" alt="Union Bank of India" class="mx-auto h-16 mb-4">
+                            <i class="fas fa-shield-alt text-4xl text-union-red mb-4"></i>
+                            <h2 class="text-2xl font-bold text-union-blue dark:text-white mb-2">Verify Your Identity</h2>
+                            <p class="text-gray-600 dark:text-gray-300">
+                                We've sent a 6-digit verification code to your registered email and phone number
+                            </p>
+                        </div>
+
+                        <form id="otpForm" class="space-y-6">
+                            <!-- OTP Input -->
+                            <div class="flex justify-center space-x-2">
+                                <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-union-red focus:ring-2 focus:ring-union-red dark:bg-gray-700 dark:text-white" required>
+                                <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-union-red focus:ring-2 focus:ring-union-red dark:bg-gray-700 dark:text-white" required>
+                                <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-union-red focus:ring-2 focus:ring-union-red dark:bg-gray-700 dark:text-white" required>
+                                <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-union-red focus:ring-2 focus:ring-union-red dark:bg-gray-700 dark:text-white" required>
+                                <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-union-red focus:ring-2 focus:ring-union-red dark:bg-gray-700 dark:text-white" required>
+                                <input type="text" maxlength="1" class="w-12 h-12 text-center text-xl border-2 border-gray-300 dark:border-gray-600 rounded-lg focus:border-union-red focus:ring-2 focus:ring-union-red dark:bg-gray-700 dark:text-white" required>
+                            </div>
+
+                            <!-- Timer -->
+                            <div class="text-center">
+                                <p class="text-sm text-gray-600 dark:text-gray-400">
+                                    Resend code in <span id="timer" class="text-union-red">30</span> seconds
+                                </p>
+                            </div>
+
+                            <!-- Verify Button -->
+                            <div>
+                                <button type="submit"
+                                    class="gradient-button w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-union-red">
+                                    Verify OTP
+                                </button>
+                            </div>
+
+                            <!-- Resend Code -->
+                            <div class="text-center">
+                                <button type="button" id="resendCode" disabled
+                                    class="text-sm text-union-red hover:text-red-700 disabled:opacity-50 disabled:cursor-not-allowed">
+                                    Resend Code
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dashboard Section -->
+        <div id="dashboardSection" class="section hidden">
+            <div class="min-h-screen bg-union-gray dark:bg-union-dark py-12">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="glass-effect rounded-lg shadow-lg p-8">
+                        <div class="flex items-center justify-between mb-8">
+                            <div>
+                                <h1 class="text-2xl font-bold text-union-blue dark:text-white">
+                                    Welcome, <span id="userName">User</span>!
+                                </h1>
+                                <p class="text-gray-600 dark:text-gray-300">
+                                    Here's an overview of your account
+                                </p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Last login</p>
+                                <p class="text-sm font-medium text-union-blue dark:text-white" id="lastLogin">Just now</p>
+                            </div>
+                        </div>
+
+                        <!-- Account Summary -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                            <div class="glass-effect rounded-lg p-6 hover:shadow-xl transition-shadow">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-medium text-union-blue dark:text-white">Account Balance</h3>
+                                    <i class="fas fa-wallet text-2xl text-union-red"></i>
+                                </div>
+                                <p class="text-2xl font-bold text-union-blue dark:text-white">₹50,000</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Available balance</p>
+                            </div>
+                            <div class="glass-effect rounded-lg p-6 hover:shadow-xl transition-shadow">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-medium text-union-blue dark:text-white">Recent Transactions</h3>
+                                    <i class="fas fa-exchange-alt text-2xl text-union-red"></i>
+                                </div>
+                                <p class="text-2xl font-bold text-union-blue dark:text-white">12</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Last 30 days</p>
+                            </div>
+                            <div class="glass-effect rounded-lg p-6 hover:shadow-xl transition-shadow">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-medium text-union-blue dark:text-white">Savings</h3>
+                                    <i class="fas fa-piggy-bank text-2xl text-union-red"></i>
+                                </div>
+                                <p class="text-2xl font-bold text-union-blue dark:text-white">₹25,000</p>
+                                <p class="text-sm text-gray-600 dark:text-gray-400">Total savings</p>
+                            </div>
+                        </div>
+
+                        <!-- Quick Actions -->
+                        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                            <button class="glass-effect flex items-center justify-center p-4 rounded-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                                <i class="fas fa-money-bill-wave text-xl text-union-red mr-2"></i>
+                                <span class="text-union-blue dark:text-white">Transfer</span>
+                            </button>
+                            <button class="glass-effect flex items-center justify-center p-4 rounded-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                                <i class="fas fa-mobile-alt text-xl text-union-red mr-2"></i>
+                                <span class="text-union-blue dark:text-white">Pay Bills</span>
+                            </button>
+                            <button class="glass-effect flex items-center justify-center p-4 rounded-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                                <i class="fas fa-chart-line text-xl text-union-red mr-2"></i>
+                                <span class="text-union-blue dark:text-white">Invest</span>
+                            </button>
+                            <button class="glass-effect flex items-center justify-center p-4 rounded-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+                                <i class="fas fa-cog text-xl text-union-red mr-2"></i>
+                                <span class="text-union-blue dark:text-white">Settings</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-union-white dark:bg-union-dark mt-20 py-8">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center text-gray-600 dark:text-gray-300">
+                <p>&copy; 2024 Union Bank of India. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Dark mode toggle
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            if (document.documentElement.classList.contains('dark')) {
+                document.documentElement.classList.remove('dark');
+                localStorage.theme = 'light';
+            } else {
+                document.documentElement.classList.add('dark');
+                localStorage.theme = 'dark';
+            }
+        });
+
+        // Section management
+        const sections = document.querySelectorAll('.section');
+        const loginTabBtn = document.getElementById('loginTabBtn');
+        const signupTabBtn = document.getElementById('signupTabBtn');
+        const dashboardTabBtn = document.getElementById('dashboardTabBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const loginFromHomeBtn = document.getElementById('loginFromHomeBtn');
+        const signupFromLoginBtn = document.getElementById('signupFromLoginBtn');
+        const loginFromSignupBtn = document.getElementById('loginFromSignupBtn');
+
+        function showSection(sectionId) {
+            sections.forEach(section => section.classList.add('hidden'));
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        function updateNavigation(isLoggedIn) {
+            if (isLoggedIn) {
+                loginTabBtn.classList.add('hidden');
+                signupTabBtn.classList.add('hidden');
+                dashboardTabBtn.classList.remove('hidden');
+                logoutBtn.classList.remove('hidden');
+            } else {
+                loginTabBtn.classList.remove('hidden');
+                signupTabBtn.classList.remove('hidden');
+                dashboardTabBtn.classList.add('hidden');
+                logoutBtn.classList.add('hidden');
+            }
+        }
+
+        // Navigation event listeners
+        loginTabBtn.addEventListener('click', () => showSection('loginSection'));
+        signupTabBtn.addEventListener('click', () => showSection('signupSection'));
+        dashboardTabBtn.addEventListener('click', () => showSection('dashboardSection'));
+        loginFromHomeBtn.addEventListener('click', () => showSection('loginSection'));
+        signupFromLoginBtn.addEventListener('click', () => showSection('signupSection'));
+        loginFromSignupBtn.addEventListener('click', () => showSection('loginSection'));
+
+        // Logout functionality
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('userName');
+            updateNavigation(false);
+            showSection('homeSection');
+        });
+
+        // Password elements
+        const loginPassword = document.getElementById('loginPassword');
+        const signupPassword = document.getElementById('signupPassword');
+        const signupConfirmPassword = document.getElementById('confirmPassword');
+        const passwordMatchMessage = document.getElementById('passwordMatchMessage');
+
+        // Password toggle buttons
+        const toggleLoginPassword = document.getElementById('toggleLoginPassword');
+        const toggleSignupPassword = document.getElementById('toggleSignupPassword');
+        const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+
+        // Toggle password visibility
+        toggleLoginPassword.addEventListener('click', () => {
+            const type = loginPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            loginPassword.setAttribute('type', type);
+            const icon = toggleLoginPassword.querySelector('i');
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        });
+
+        toggleSignupPassword.addEventListener('click', () => {
+            const type = signupPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            signupPassword.setAttribute('type', type);
+            const icon = toggleSignupPassword.querySelector('i');
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        });
+
+        toggleConfirmPassword.addEventListener('click', () => {
+            const type = signupConfirmPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            signupConfirmPassword.setAttribute('type', type);
+            const icon = toggleConfirmPassword.querySelector('i');
+            icon.classList.toggle('fa-eye');
+            icon.classList.toggle('fa-eye-slash');
+        });
+
+        // Password criteria checks
+        function checkPasswordCriteria(password) {
+            const lengthCheck = document.getElementById('lengthCheck');
+            const uppercaseCheck = document.getElementById('uppercaseCheck');
+            const lowercaseCheck = document.getElementById('lowercaseCheck');
+            const numberCheck = document.getElementById('numberCheck');
+            const specialCheck = document.getElementById('specialCheck');
+
+            // Length check
+            if (password.length >= 8) {
+                lengthCheck.classList.remove('text-red-500');
+                lengthCheck.classList.add('text-green-500');
+            } else {
+                lengthCheck.classList.remove('text-green-500');
+                lengthCheck.classList.add('text-red-500');
+            }
+
+            // Uppercase check
+            if (/[A-Z]/.test(password)) {
+                uppercaseCheck.classList.remove('text-red-500');
+                uppercaseCheck.classList.add('text-green-500');
+            } else {
+                uppercaseCheck.classList.remove('text-green-500');
+                uppercaseCheck.classList.add('text-red-500');
+            }
+
+            // Lowercase check
+            if (/[a-z]/.test(password)) {
+                lowercaseCheck.classList.remove('text-red-500');
+                lowercaseCheck.classList.add('text-green-500');
+            } else {
+                lowercaseCheck.classList.remove('text-green-500');
+                lowercaseCheck.classList.add('text-red-500');
+            }
+
+            // Number check
+            if (/[0-9]/.test(password)) {
+                numberCheck.classList.remove('text-red-500');
+                numberCheck.classList.add('text-green-500');
+            } else {
+                numberCheck.classList.remove('text-green-500');
+                numberCheck.classList.add('text-red-500');
+            }
+
+            // Special character check
+            if (/[!@#$%^&*]/.test(password)) {
+                specialCheck.classList.remove('text-red-500');
+                specialCheck.classList.add('text-green-500');
+            } else {
+                specialCheck.classList.remove('text-green-500');
+                specialCheck.classList.add('text-red-500');
+            }
+        }
+
+        // Password input event listeners
+        signupPassword.addEventListener('input', (e) => {
+            checkPasswordCriteria(e.target.value);
+            checkPasswordMatch();
+        });
+
+        signupConfirmPassword.addEventListener('input', checkPasswordMatch);
+
+        // Add password match validation
+        function checkPasswordMatch() {
+            if (signupPassword.value && signupConfirmPassword.value) {
+                if (signupPassword.value === signupConfirmPassword.value) {
+                    passwordMatchMessage.textContent = 'Passwords match ✓';
+                    passwordMatchMessage.className = 'mt-1 text-sm text-green-500';
+                    signupConfirmPassword.classList.remove('border-red-500');
+                    signupConfirmPassword.classList.add('border-green-500');
+                } else {
+                    passwordMatchMessage.textContent = 'Passwords do not match ✗';
+                    passwordMatchMessage.className = 'mt-1 text-sm text-red-500';
+                    signupConfirmPassword.classList.remove('border-green-500');
+                    signupConfirmPassword.classList.add('border-red-500');
+                }
+            } else {
+                passwordMatchMessage.textContent = '';
+            }
+        }
+
+        // Form validation and submission
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const otpForm = document.getElementById('otpForm');
+        const otpInputs = document.querySelectorAll('#otpForm input[type="text"]');
+        const resendCode = document.getElementById('resendCode');
+        let timeLeft = 30;
+        let timer = null;
+
+        // PAN card validation
+        const pan = document.getElementById('pan');
+        pan.addEventListener('input', (e) => {
+            e.target.value = e.target.value.toUpperCase();
+        });
+
+        // Phone number validation
+        const phone = document.getElementById('phone');
+        phone.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+        });
+
+        // PIN validation
+        const pin = document.getElementById('pin');
+        pin.addEventListener('input', function(e) {
+            // Remove any non-numeric characters
+            this.value = this.value.replace(/[^0-9]/g, '');
+            // Limit to 4 digits
+            if (this.value.length > 4) {
+                this.value = this.value.slice(0, 4);
+            }
+        });
+
+        // OTP timer functionality
+        function startTimer() {
+            timeLeft = 30;
+            resendCode.disabled = true;
+            timer = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer').textContent = timeLeft;
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    resendCode.disabled = false;
+                }
+            }, 1000);
+        }
+
+        // OTP input handling
+        otpInputs.forEach((input, index) => {
+            input.addEventListener('input', (e) => {
+                e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                if (e.target.value && index < otpInputs.length - 1) {
+                    otpInputs[index + 1].focus();
+                }
+            });
+
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    otpInputs[index - 1].focus();
+                }
+            });
+        });
+
+        // Form submission handlers
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('emailPhone').value;
+            const password = loginPassword.value;
+            const pin = document.getElementById('pin').value;
+
+            if (!email || !password || !pin) {
+                alert('Please fill in all fields');
+                return;
+            }
+
+            if (pin.length !== 4) {
+                alert('PIN must be 4 digits');
+                return;
+            }
+
+            try {
+                const response = await fetch('http://localhost:5000/api/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        email: email,
+                        password: password,
+                        pin: pin
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    // Store user name and update UI
+                    localStorage.setItem('userName', data.username);
+                    updateNavigation(true);
+                    showSection('dashboardSection');
+                } else {
+                    alert(data.error || 'Login failed. Please check your credentials.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error connecting to server. Please make sure the server is running.');
+            }
+        });
+
+        // Form validation
+        signupForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            // Get form data
+            const formData = {
+                username: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                dob: document.getElementById('dob').value,
+                nationality: document.getElementById('nationality').value,
+                pan: document.getElementById('pan').value,
+                city: document.getElementById('city').value,
+                pincode: document.getElementById('pincode').value,
+                pin: document.getElementById('pin').value,
+                password: document.getElementById('signupPassword').value
+            };
+
+            // Send data to server
+            fetch('http://localhost:5000/api/signup', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message) {
+                    alert('Account created successfully!');
+                    showSection('loginSection');
+                } else {
+                    alert(data.error || 'Error creating account');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error creating account');
+            });
+        });
+
+        // OTP form submission
+        otpForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const otp = Array.from(otpInputs).map(input => input.value).join('');
+            
+            if (otp.length !== 6) {
+                alert('Please enter a valid 6-digit OTP');
+                return;
+            }
+
+            try {
+                // Get stored signup data
+                const signupData = JSON.parse(localStorage.getItem('signupData'));
+                
+                // Verify OTP
+                const verifyResponse = await fetch('http://localhost:5000/api/verify-otp', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        phone: signupData.phone,
+                        otp: otp,
+                        signup_data: signupData
+                    })
+                });
+
+                const verifyData = await verifyResponse.json();
+
+                if (verifyResponse.ok) {
+                    // Clear stored signup data
+                    localStorage.removeItem('signupData');
+                    // Store user name and update UI
+                    localStorage.setItem('userName', signupData.username);
+                    updateNavigation(true);
+                    showSection('dashboardSection');
+                } else {
+                    alert(verifyData.error || 'Invalid OTP. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error verifying OTP. Please try again.');
+            }
+        });
+
+        // Initialize dashboard
+        const userName = localStorage.getItem('userName') || 'User';
+        document.getElementById('userName').textContent = userName;
+
+        const lastLogin = new Date().toLocaleString();
+        document.getElementById('lastLogin').textContent = lastLogin;
+
+        // Check if user is logged in
+        if (localStorage.getItem('userName')) {
+            updateNavigation(true);
+            showSection('dashboardSection');
+        }
+    </script>
+</body>
+</html> 
