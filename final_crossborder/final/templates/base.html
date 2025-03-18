@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Union Bank - Cross Border Transactions</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        .navbar {
+            background: linear-gradient(to right, #1a365d, #2a4365);
+        }
+        .btn-primary {
+            background-color: #1a365d;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            background-color: #2a4365;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+    <nav class="navbar p-4 text-white">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="/" class="text-2xl font-bold">Union Bank</a>
+            <div class="space-x-4">
+                {% if user.is_authenticated %}
+                    <a href="{% url 'dashboard' %}" class="hover:text-gray-300">Dashboard</a>
+                    <a href="{% url 'transfer' %}" class="hover:text-gray-300">International Transfer</a>
+                    <a href="{% url 'domestic-transfer' %}" class="hover:text-gray-300">Domestic Transfer</a>
+                    <a href="{% url 'history' %}" class="hover:text-gray-300">Transaction History</a>
+                    <a href="{% url 'profile' %}" class="hover:text-gray-300">My Profile</a>
+                    {% if user.is_staff %}
+                        <a href="{% url 'fraud_dashboard' %}" class="hover:text-gray-300 bg-red-700 px-2 py-1 rounded">Fraud Dashboard</a>
+                    {% endif %}
+                    <a href="{% url 'logout' %}" class="btn-primary">Logout</a>
+                {% else %}
+                    <a href="{% url 'login' %}" class="btn-primary">Login</a>
+                    <a href="{% url 'register' %}" class="btn-primary">Register</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto mt-8 px-4">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mb-4 p-4 rounded {% if message.tags == 'success' %}bg-green-100 text-green-700{% else %}bg-red-100 text-red-700{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="mt-16 py-8 bg-gray-800 text-white">
+        <div class="container mx-auto text-center">
+            <p>&copy; 2024 Union Bank. All rights reserved.</p>
+        </div>
+    </footer>
+</body>
+</html> 

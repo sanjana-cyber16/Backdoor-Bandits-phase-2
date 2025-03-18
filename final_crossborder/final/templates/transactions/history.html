@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="bg-white shadow rounded-lg p-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold">Transaction History</h1>
+        <a href="?export=excel" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+            Export to Excel
+        </a>
+    </div>
+
+    {% if transactions %}
+        <div class="overflow-x-auto">
+            <table class="min-w-full bg-white">
+                <thead class="bg-gray-100">
+                    <tr>
+                        <th class="py-3 px-4 text-left">Date</th>
+                        <th class="py-3 px-4 text-left">Type</th>
+                        <th class="py-3 px-4 text-left">Amount</th>
+                        <th class="py-3 px-4 text-left">Recipient</th>
+                        <th class="py-3 px-4 text-left">Conversion Rate</th>
+                        <th class="py-3 px-4 text-left">Converted Amount</th>
+                        <th class="py-3 px-4 text-left">Status</th>
+                        <th class="py-3 px-4 text-left">Risk</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transaction in transactions %}
+                    <tr class="border-b hover:bg-gray-50 {% if transaction.is_suspicious %}bg-red-50{% endif %}">
+                        <td class="py-3 px-4">{{ transaction.created_at|date:"M d, Y H:i" }}</td>
+                        <td class="py-3 px-4">{{ transaction.get_transaction_type_display }}</td>
+                        <td class="py-3 px-4">{{ transaction.amount }} {{ transaction.source_currency }}</td>
+                        <td class="py-3 px-4">{{ transaction.recipient_name }}</td>
+                        <td class="py-3 px-4">{{ transaction.conversion_rate }}</td>
+                        <td class="py-3 px-4">{{ transaction.converted_amount }} {{ transaction.target_currency }}</td>
+                        <td class="py-3 px-4">
+                            <span class="px-2 py-1 rounded-full text-sm
+                                {% if transaction.status == 'completed' %}bg-green-100 text-green-800
+                                {% elif transaction.status == 'pending' %}bg-yellow-100 text-yellow-800
+                                {% else %}bg-red-100 text-red-800{% endif %}">
+                                {{ transaction.get_status_display }}
+                            </span>
+                        </td>
+                        <td class="py-3 px-4">
+                            {% if transaction.is_suspicious %}
+                                <span class="px-2 py-1 rounded-full text-sm bg-red-100 text-red-800"
+                                      title="{{ transaction.suspicious_reason }}">
+                                    High Risk
+                                </span>
+                                {% if transaction.suspicious_reason %}
+                                <div class="text-xs text-red-600 mt-1">{{ transaction.suspicious_reason|truncatechars:30 }}</div>
+                                {% endif %}
+                                
+                                {% if transaction.ml_risk_score %}
+                                <div class="mt-2">
+                                    <div class="text-xs text-orange-600">ML Risk Score: {{ transaction.ml_risk_score }}%</div>
+                                    <div class="w-full bg-gray-200 rounded-full h-2 mt-1">
+                                        <div class="{% if transaction.ml_risk_score > 80 %}bg-red-600{% elif transaction.ml_risk_score > 50 %}bg-orange-500{% else %}bg-yellow-400{% endif %} h-2 rounded-full" style="width: {{ transaction.ml_risk_score }}%"></div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            {% else %}
+                                <span class="px-2 py-1 rounded-full text-sm bg-green-100 text-green-800">
+                                    Normal
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% else %}
+        <p class="text-gray-500 text-center py-8">No transactions found.</p>
+    {% endif %}
+</div>
+{% endblock %} 

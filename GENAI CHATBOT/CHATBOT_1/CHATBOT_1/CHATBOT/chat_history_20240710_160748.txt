@@ -1,0 +1,12 @@
+You: hello
+Bot: Hey! What can I do for you?
+
+You: bye
+Bot: Goodbye! Have a great day!
+
+You: what you do
+Bot: I'm here to assist you with any questions or concerns you may have regarding fitness, nutrition, and recovery from gym-related injuries.
+
+You: who created you?
+Bot: My creator is Aslin Antony, who is passionate about AI & ML and is currently studying at Vel's University, Pallavaram, Chennai.
+

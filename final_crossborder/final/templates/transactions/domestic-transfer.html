@@ -1,0 +1,546 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="bg-white shadow rounded-lg p-6">
+    <h1 class="text-2xl font-bold mb-6">Domestic Money Transfer</h1>
+
+    <!-- Transaction Limits Info -->
+    <div class="bg-blue-50 p-4 rounded-lg mb-6">
+        <h2 class="text-lg font-semibold text-blue-800 mb-2">Transaction Limits</h2>
+        <ul class="text-blue-600 list-disc list-inside">
+            <li>Minimum amount: ₹{{ min_amount }}</li>
+            <li>Maximum amount: ₹{{ max_amount|floatformat:2 }}</li>
+            <li>Maximum {{ max_transactions_per_window }} transactions per {{ time_window }} minutes</li>
+            <li>Your current balance: ₹{{ user.userprofile.balance|floatformat:2 }}</li>
+        </ul>
+    </div>
+
+    {% if insufficient_balance %}
+    <!-- Insufficient Balance Alert -->
+    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+        <div class="flex">
+            <div class="py-1">
+                <svg class="h-6 w-6 text-red-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <div>
+                <p class="font-bold">INSUFFICIENT BALANCE!</p>
+                <p>You don't have enough funds to complete this transfer.</p>
+                <p><strong>Your current balance:</strong> ₹{{ current_balance|floatformat:2 }}</p>
+                <p class="mt-2">Please enter a lower amount or add funds to your account.</p>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if is_fraudulent %}
+    <!-- Fraud Warning Alert -->
+    <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+        <div class="flex">
+            <div class="py-1">
+                <svg class="h-6 w-6 text-red-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <div>
+                <p class="font-bold text-lg text-red-800">TRANSACTION BLOCKED - FRAUDULENT ACCOUNT</p>
+                <p>This account is in our fraud database and all transactions are blocked.</p>
+                <p><strong>Reason:</strong> {{ fraud_reason }}</p>
+                <p><strong>Risk Level:</strong> <span class="font-bold {% if risk_level == 'High' %}text-red-700{% elif risk_level == 'Medium' %}text-orange-600{% else %}text-yellow-600{% endif %}">{{ risk_level }}</span></p>
+                
+                {% if recipient_risk == 100 %}
+                <div class="mt-4">
+                    <p><strong>Fraud Risk:</strong> <span class="font-bold text-red-700">100%</span></p>
+                    <div class="w-full bg-gray-200 rounded-full h-4 mt-1">
+                        <div class="bg-red-600 h-4 rounded-full" style="width: 100%"></div>
+                    </div>
+                    <p class="mt-2 text-red-800 font-semibold">For your protection, all transactions to this account have been permanently blocked.</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if fraud_score %}
+    <!-- ML Model Risk Alert -->
+    <div class="bg-orange-100 border-l-4 border-orange-500 text-orange-700 p-4 mb-6" role="alert">
+        <div class="flex">
+            <div class="py-1">
+                <svg class="h-6 w-6 text-orange-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div>
+                <p class="font-bold">ML FRAUD DETECTION ALERT</p>
+                <div class="mt-2">
+                    <p>Our machine learning model has flagged this transaction as potentially fraudulent.</p>
+                    <div class="mt-2">
+                        <p><strong>Risk Percentage:</strong> <span class="font-bold {% if fraud_score > 80 %}text-red-700{% elif fraud_score > 50 %}text-orange-600{% else %}text-yellow-600{% endif %}">{{ fraud_score }}%</span></p>
+                        <div class="w-full bg-gray-200 rounded-full h-4 mt-1">
+                            <div class="{% if fraud_score > 80 %}bg-red-600{% elif fraud_score > 50 %}bg-orange-500{% else %}bg-yellow-400{% endif %} h-4 rounded-full" style="width: {{ fraud_score }}%"></div>
+                        </div>
+                    </div>
+                    {% if fraud_score > 80 %}
+                    <p class="mt-2 text-red-700 font-semibold">High risk detected. Transfer is blocked for your protection.</p>
+                    {% elif fraud_score > 50 %}
+                    <p class="mt-2 text-orange-600">Moderate risk detected. Please verify all details carefully.</p>
+                    {% else %}
+                    <p class="mt-2 text-yellow-700">Low risk detected. You can proceed with caution.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Real-time Fraud Check Alert (hidden by default) -->
+    <div id="fraud-alert" class="hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+        <div class="flex">
+            <div class="py-1">
+                <svg class="h-6 w-6 text-red-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <div>
+                <p class="font-bold">SUSPICIOUS ACCOUNT DETECTED!</p>
+                <p>This account has been flagged in our fraud database.</p>
+                <p><strong>Reason:</strong> <span id="fraud-reason"></span></p>
+                <p><strong>Risk Level:</strong> <span id="risk-level" class="font-bold"></span></p>
+                <p class="mt-2">For your safety, transfers to this account have been disabled.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inactive Account Alert (hidden by default) -->
+    <div id="inactive-alert" class="hidden bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
+        <div class="flex">
+            <div class="py-1">
+                <svg class="h-6 w-6 text-yellow-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <div>
+                <p class="font-bold">ACCOUNT NOT FOUND!</p>
+                <p>The recipient is not registered in our system.</p>
+                <p>Please verify the account details before proceeding.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Name Mismatch Alert (hidden by default) -->
+    <div id="name-mismatch-alert" class="hidden bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
+        <div class="flex">
+            <div class="py-1">
+                <svg class="h-6 w-6 text-yellow-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <div>
+                <p class="font-bold">NAME MISMATCH!</p>
+                <p>The recipient name does not match our records for this account number.</p>
+                <p>Please verify the recipient name before proceeding.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Suspicious Pattern Alert (hidden by default) -->
+    <div id="suspicious-alert" class="hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+        <div class="flex">
+            <div class="py-1">
+                <svg class="h-6 w-6 text-red-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <div>
+                <p class="font-bold">SUSPICIOUS TRANSFER PATTERN!</p>
+                <p>This transaction has been flagged because you recently received a similar amount.</p>
+                <p>For security reasons, this transfer has been blocked.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recipient Risk Analysis Alert (hidden by default) -->
+    <div id="recipient-risk-alert" class="hidden bg-yellow-100 border-l-4 border-yellow-500 text-yellow-700 p-4 mb-6" role="alert">
+        <div class="flex">
+            <div class="py-1">
+                <svg class="h-6 w-6 text-yellow-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <div class="w-full">
+                <p class="font-bold">RECIPIENT RISK ANALYSIS</p>
+                <div class="mt-2">
+                    <p>Based on recipient's transaction history:</p>
+                    <div class="mt-2">
+                        <p><strong>Risk Level:</strong> <span id="recipient-risk-percentage" class="font-bold">0%</span></p>
+                        <div class="w-full bg-gray-200 rounded-full h-4 mt-1">
+                            <div id="recipient-risk-bar" class="bg-yellow-400 h-4 rounded-full" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div id="recipient-risk-factors" class="mt-2 text-sm">
+                        <!-- Risk factors will be inserted here -->
+                    </div>
+                    <div id="high-risk-warning" class="hidden mt-3 text-red-700 font-semibold">
+                        High risk detected. This transaction will be blocked for your protection.
+                    </div>
+                    <div id="medium-risk-warning" class="hidden mt-3 text-orange-600">
+                        Moderate risk detected. Please verify all details carefully before proceeding.
+                    </div>
+                    <div id="low-risk-warning" class="hidden mt-3 text-yellow-700">
+                        Low risk detected. You can proceed with normal caution.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Insufficient Balance Alert (hidden by default) -->
+    <div id="insufficient-balance-alert" class="hidden bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6" role="alert">
+        <div class="flex">
+            <div class="py-1">
+                <svg class="h-6 w-6 text-red-500 mr-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+            </div>
+            <div>
+                <p class="font-bold">INSUFFICIENT BALANCE!</p>
+                <p>You don't have enough funds to complete this transfer.</p>
+                <p><strong>Your current balance:</strong> ₹{{ user.userprofile.balance|floatformat:2 }}</p>
+                <p class="mt-2">Please enter a lower amount or add funds to your account.</p>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" class="space-y-6" id="transfer-form">
+        {% csrf_token %}
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2" for="amount">Amount (INR)</label>
+                <input type="number" name="amount" id="amount" step="0.01" required
+                    min="{{ min_amount }}" max="{{ max_amount }}"
+                    class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    value="{{ form_data.amount|default:'' }}">
+                <p class="mt-1 text-sm text-gray-500">Amount must be between ₹{{ min_amount }} and ₹{{ max_amount|floatformat:2 }}</p>
+            </div>
+
+            <input type="hidden" name="source_currency" value="INR">
+            <input type="hidden" name="target_currency" value="INR">
+        </div>
+
+        <div class="border-t border-gray-200 pt-6 mt-6">
+            <h2 class="text-lg font-semibold mb-4">Recipient Information</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2" for="recipient_name">Recipient Name</label>
+                    <input type="text" name="recipient_name" id="recipient_name" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value="{{ form_data.recipient_name|default:'' }}">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2" for="recipient_account">Account Number</label>
+                    <input type="text" name="recipient_account" id="recipient_account" required pattern="[0-9]{9,18}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value="{{ form_data.recipient_account|default:'' }}">
+                    <p class="mt-1 text-sm text-gray-500">Enter a valid account number (9-18 digits)</p>
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2" for="recipient_bank">Bank Name</label>
+                    <input type="text" name="recipient_bank" id="recipient_bank" required
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value="{{ form_data.recipient_bank|default:'' }}">
+                </div>
+
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2" for="ifsc_code">IFSC Code</label>
+                    <input type="text" name="ifsc_code" id="ifsc_code" required pattern="[A-Z]{4}0[A-Z0-9]{6}"
+                        class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        value="{{ form_data.ifsc_code|default:'' }}">
+                    <p class="mt-1 text-sm text-gray-500">Enter a valid IFSC code (e.g., SBIN0123456)</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end space-x-4">
+            <a href="{% url 'dashboard' %}" class="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50">Cancel</a>
+            <button type="submit" class="btn-primary" id="submit-button" {% if is_fraudulent %}disabled{% endif %}>Send Money</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const amountInput = document.getElementById('amount');
+        const accountInput = document.getElementById('recipient_account');
+        const nameInput = document.getElementById('recipient_name');
+        const bankInput = document.getElementById('recipient_bank');
+        const ifscInput = document.getElementById('ifsc_code');
+        const submitButton = document.getElementById('submit-button');
+        const fraudAlert = document.getElementById('fraud-alert');
+        const fraudReason = document.getElementById('fraud-reason');
+        const riskLevel = document.getElementById('risk-level');
+        const inactiveAlert = document.getElementById('inactive-alert');
+        const nameMismatchAlert = document.getElementById('name-mismatch-alert');
+        const suspiciousAlert = document.getElementById('suspicious-alert');
+        const recipientRiskAlert = document.getElementById('recipient-risk-alert');
+        const recipientRiskPercentage = document.getElementById('recipient-risk-percentage');
+        const recipientRiskBar = document.getElementById('recipient-risk-bar');
+        const recipientRiskFactors = document.getElementById('recipient-risk-factors');
+        const highRiskWarning = document.getElementById('high-risk-warning');
+        const mediumRiskWarning = document.getElementById('medium-risk-warning');
+        const lowRiskWarning = document.getElementById('low-risk-warning');
+        const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        
+        let debounceTimer;
+        let accountInfoTimer;
+        
+        // Function to update the risk bar color based on percentage
+        function updateRiskBar(percentage) {
+            recipientRiskPercentage.textContent = percentage + '%';
+            recipientRiskBar.style.width = percentage + '%';
+            
+            // Hide all warnings first
+            highRiskWarning.classList.add('hidden');
+            mediumRiskWarning.classList.add('hidden');
+            lowRiskWarning.classList.add('hidden');
+            
+            // Set appropriate color and show warning based on risk level
+            if (percentage > 75) {
+                recipientRiskBar.className = 'bg-red-600 h-4 rounded-full';
+                recipientRiskPercentage.className = 'font-bold text-red-700';
+                highRiskWarning.classList.remove('hidden');
+                submitButton.disabled = true;
+                submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+            } else if (percentage > 50) {
+                recipientRiskBar.className = 'bg-orange-500 h-4 rounded-full';
+                recipientRiskPercentage.className = 'font-bold text-orange-600';
+                mediumRiskWarning.classList.remove('hidden');
+            } else {
+                recipientRiskBar.className = 'bg-yellow-400 h-4 rounded-full';
+                recipientRiskPercentage.className = 'font-bold text-yellow-600';
+                lowRiskWarning.classList.remove('hidden');
+            }
+        }
+        
+        // Function to get account information
+        function getAccountInfo() {
+            clearTimeout(accountInfoTimer);
+            
+            // Only check if account number has data
+            if (!accountInput.value || accountInput.value.length < 9) {
+                return;
+            }
+            
+            accountInfoTimer = setTimeout(() => {
+                const formData = new FormData();
+                formData.append('csrfmiddlewaretoken', csrfToken);
+                formData.append('account_number', accountInput.value);
+                
+                fetch('{% url "get_account_info" %}', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Auto-fill recipient name
+                        nameInput.value = data.full_name;
+                        
+                        // Auto-fill bank name if empty
+                        if (!bankInput.value) {
+                            bankInput.value = data.bank_name;
+                        }
+                        
+                        // Auto-fill IFSC code if empty
+                        if (!ifscInput.value) {
+                            ifscInput.value = data.ifsc_code;
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error getting account info:', error);
+                });
+            }, 300); // Debounce for 300ms
+        }
+        
+        // Function to check for fraudulent accounts
+        function checkAccount() {
+            clearTimeout(debounceTimer);
+            
+            // Only check if we have at least one field with data
+            if (!accountInput.value && !nameInput.value && !bankInput.value && !ifscInput.value) {
+                return;
+            }
+            
+            debounceTimer = setTimeout(() => {
+                const formData = new FormData();
+                formData.append('csrfmiddlewaretoken', csrfToken);
+                formData.append('account_number', accountInput.value);
+                formData.append('recipient_name', nameInput.value);
+                formData.append('recipient_bank', bankInput.value);
+                formData.append('ifsc_code', ifscInput.value);
+                formData.append('amount', amountInput.value || '0');
+                
+                fetch('{% url "check_account" %}', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Hide all alerts first
+                    fraudAlert.classList.add('hidden');
+                    inactiveAlert.classList.add('hidden');
+                    nameMismatchAlert.classList.add('hidden');
+                    suspiciousAlert.classList.add('hidden');
+                    recipientRiskAlert.classList.add('hidden');
+                    submitButton.disabled = false;
+                    submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                    
+                    // Check for fraudulent account
+                    if (data.is_fraudulent) {
+                        // Show fraud alert
+                        fraudReason.textContent = data.reason;
+                        riskLevel.textContent = data.risk_level;
+                        
+                        // Set risk level color
+                        riskLevel.className = 'font-bold';
+                        if (data.risk_level === 'High') {
+                            riskLevel.classList.add('text-red-700');
+                        } else if (data.risk_level === 'Medium') {
+                            riskLevel.classList.add('text-orange-600');
+                        } else {
+                            riskLevel.classList.add('text-yellow-600');
+                        }
+                        
+                        fraudAlert.classList.remove('hidden');
+                        submitButton.disabled = true;
+                        submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+                        return;
+                    }
+                    
+                    // Check for suspicious pattern
+                    if (data.is_suspicious) {
+                        // Update the suspicious alert text if reason is provided
+                        if (data.suspicious_reason) {
+                            const reasonElement = suspiciousAlert.querySelector('p:nth-child(2)');
+                            if (reasonElement) {
+                                reasonElement.textContent = data.suspicious_reason;
+                            }
+                        }
+                        
+                        suspiciousAlert.classList.remove('hidden');
+                        submitButton.disabled = true;
+                        submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+                        return;
+                    }
+                    
+                    // Check if account exists
+                    if (accountInput.value && !data.is_active) {
+                        inactiveAlert.classList.remove('hidden');
+                        submitButton.disabled = true;
+                        submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+                        return;
+                    }
+                    
+                    // Check for name mismatch
+                    if (data.name_mismatch) {
+                        nameMismatchAlert.classList.remove('hidden');
+                        submitButton.disabled = true;
+                        submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+                        return;
+                    }
+                    
+                    // Display recipient risk analysis if available
+                    if (data.recipient_analysis && accountInput.value && amountInput.value) {
+                        const riskPercentage = data.recipient_analysis.risk_percentage;
+                        const riskFactors = data.recipient_analysis.risk_factors;
+                        
+                        // Update risk display
+                        updateRiskBar(riskPercentage);
+                        
+                        // Clear existing risk factors
+                        recipientRiskFactors.innerHTML = '';
+                        
+                        // Add each risk factor
+                        if (riskFactors && riskFactors.length > 0) {
+                            const ul = document.createElement('ul');
+                            ul.className = 'list-disc list-inside';
+                            
+                            riskFactors.forEach(factor => {
+                                const li = document.createElement('li');
+                                li.textContent = factor;
+                                li.className = 'mb-1';
+                                ul.appendChild(li);
+                            });
+                            
+                            recipientRiskFactors.appendChild(ul);
+                        } else {
+                            recipientRiskFactors.innerHTML = '<p>No specific risk factors identified.</p>';
+                        }
+                        
+                        // Show the risk analysis alert
+                        recipientRiskAlert.classList.remove('hidden');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error checking account:', error);
+                });
+            }, 500); // Debounce for 500ms
+        }
+        
+        // Add event listener for account number to auto-fill recipient name
+        accountInput.addEventListener('input', getAccountInfo);
+        
+        // Add event listeners to check for fraud on input
+        accountInput.addEventListener('input', checkAccount);
+        nameInput.addEventListener('input', checkAccount);
+        bankInput.addEventListener('input', checkAccount);
+        ifscInput.addEventListener('input', checkAccount);
+        amountInput.addEventListener('input', checkAccount);
+
+        // Validate amount
+        amountInput.addEventListener('input', function() {
+            const value = parseFloat(this.value);
+            const currentBalance = {{ user.userprofile.balance }};
+            const insufficientBalanceAlert = document.getElementById('insufficient-balance-alert');
+            
+            if (value < {{ min_amount }}) {
+                this.setCustomValidity(`Amount must be at least ₹{{ min_amount }}`);
+                insufficientBalanceAlert.classList.add('hidden');
+            } else if (value > {{ max_amount }}) {
+                this.setCustomValidity(`Amount cannot exceed ₹{{ max_amount }}`);
+                insufficientBalanceAlert.classList.add('hidden');
+            } else if (value > currentBalance) {
+                this.setCustomValidity(`Insufficient balance. Your current balance is ₹${currentBalance.toFixed(2)}`);
+                insufficientBalanceAlert.classList.remove('hidden');
+                submitButton.disabled = true;
+                submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+            } else {
+                this.setCustomValidity('');
+                insufficientBalanceAlert.classList.add('hidden');
+                
+                // Only enable the submit button if no other alerts are visible
+                if (fraudAlert.classList.contains('hidden') && 
+                    inactiveAlert.classList.contains('hidden') && 
+                    nameMismatchAlert.classList.contains('hidden') && 
+                    suspiciousAlert.classList.contains('hidden') &&
+                    recipientRiskAlert.classList.contains('hidden')) {
+                    submitButton.disabled = false;
+                    submitButton.classList.remove('opacity-50', 'cursor-not-allowed');
+                }
+            }
+        });
+        
+        // Disable submit button if fraudulent
+        {% if is_fraudulent %}
+        submitButton.disabled = true;
+        submitButton.classList.add('opacity-50', 'cursor-not-allowed');
+        {% endif %}
+    });
+</script>
+{% endblock %} 

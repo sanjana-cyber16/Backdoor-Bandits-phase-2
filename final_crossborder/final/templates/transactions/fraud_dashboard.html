@@ -1,0 +1,207 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<!-- Chart.js for visualizations -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div class="bg-white shadow rounded-lg p-6">
+    <h1 class="text-2xl font-bold mb-6">Fraud Detection Dashboard</h1>
+    
+    <!-- Summary Statistics -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+        <div class="bg-blue-50 p-4 rounded-lg shadow">
+            <h2 class="text-lg font-semibold text-blue-800">Total Transactions</h2>
+            <p class="text-3xl font-bold">{{ total_count }}</p>
+        </div>
+        
+        <div class="bg-red-50 p-4 rounded-lg shadow">
+            <h2 class="text-lg font-semibold text-red-800">Suspicious Transactions</h2>
+            <p class="text-3xl font-bold">{{ suspicious_count }}</p>
+        </div>
+        
+        <div class="bg-purple-50 p-4 rounded-lg shadow">
+            <h2 class="text-lg font-semibold text-purple-800">Fraud Percentage</h2>
+            <p class="text-3xl font-bold">{{ fraud_percentage }}%</p>
+        </div>
+    </div>
+    
+    <!-- Charts -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+        <div class="bg-white p-4 rounded-lg shadow border">
+            <h2 class="text-lg font-semibold mb-2">Transactions by Month</h2>
+            <canvas id="transactionChart" height="250"></canvas>
+        </div>
+        
+        <div class="bg-white p-4 rounded-lg shadow border">
+            <h2 class="text-lg font-semibold mb-2">Top Fraud Reasons</h2>
+            {% if top_reasons %}
+                <canvas id="reasonsChart" height="250"></canvas>
+            {% else %}
+                <p class="text-gray-500 text-center py-8">No fraud reasons found.</p>
+            {% endif %}
+        </div>
+
+        <div class="bg-white p-4 rounded-lg shadow border">
+            <h2 class="text-lg font-semibold mb-2">ML Risk Score Distribution</h2>
+            {% if ml_score_count > 0 %}
+                <div class="flex items-center justify-center mb-4">
+                    <div class="bg-orange-50 p-2 rounded-lg text-center">
+                        <p class="text-sm text-gray-600">Average Risk Score</p>
+                        <p class="text-2xl font-bold {% if avg_ml_score > 80 %}text-red-700{% elif avg_ml_score > 50 %}text-orange-600{% else %}text-yellow-600{% endif %}">
+                            {{ avg_ml_score }}%
+                        </p>
+                    </div>
+                </div>
+                <canvas id="riskScoreChart" height="250"></canvas>
+            {% else %}
+                <p class="text-gray-500 text-center py-8">No ML risk scores available.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <!-- Recent Suspicious Transactions -->
+    <div class="bg-white p-4 rounded-lg shadow border">
+        <h2 class="text-lg font-semibold mb-2">Recent Suspicious Transactions</h2>
+        
+        {% if recent_suspicious %}
+            <div class="overflow-x-auto">
+                <table class="min-w-full bg-white">
+                    <thead class="bg-gray-100">
+                        <tr>
+                            <th class="py-3 px-4 text-left">Date</th>
+                            <th class="py-3 px-4 text-left">User</th>
+                            <th class="py-3 px-4 text-left">Type</th>
+                            <th class="py-3 px-4 text-left">Amount</th>
+                            <th class="py-3 px-4 text-left">Recipient</th>
+                            <th class="py-3 px-4 text-left">Reason</th>
+                            <th class="py-3 px-4 text-left">ML Risk Score</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for transaction in recent_suspicious %}
+                        <tr class="border-b hover:bg-gray-50 bg-red-50">
+                            <td class="py-3 px-4">{{ transaction.created_at|date:"M d, Y H:i" }}</td>
+                            <td class="py-3 px-4">{{ transaction.user.username }}</td>
+                            <td class="py-3 px-4">{{ transaction.get_transaction_type_display }}</td>
+                            <td class="py-3 px-4">{{ transaction.amount }} {{ transaction.source_currency }}</td>
+                            <td class="py-3 px-4">{{ transaction.recipient_name }}</td>
+                            <td class="py-3 px-4">{{ transaction.suspicious_reason|truncatechars:50 }}</td>
+                            <td class="py-3 px-4">
+                                {% if transaction.ml_risk_score %}
+                                    <div class="flex items-center">
+                                        <span class="mr-2 font-semibold {% if transaction.ml_risk_score > 80 %}text-red-700{% elif transaction.ml_risk_score > 50 %}text-orange-600{% else %}text-yellow-600{% endif %}">
+                                            {{ transaction.ml_risk_score }}%
+                                        </span>
+                                        <div class="w-20 bg-gray-200 rounded-full h-3">
+                                            <div class="{% if transaction.ml_risk_score > 80 %}bg-red-600{% elif transaction.ml_risk_score > 50 %}bg-orange-500{% else %}bg-yellow-400{% endif %} h-3 rounded-full" style="width: {{ transaction.ml_risk_score }}%"></div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <span class="text-gray-500">N/A</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <p class="text-gray-500 text-center py-8">No suspicious transactions found.</p>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    // Transactions Chart
+    const transactionCtx = document.getElementById('transactionChart').getContext('2d');
+    const transactionChart = new Chart(transactionCtx, {
+        type: 'bar',
+        data: {
+            labels: {{ months|safe }},
+            datasets: [
+                {
+                    label: 'Total Transactions',
+                    data: {{ totals|safe }},
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Suspicious Transactions',
+                    data: {{ suspicious_counts|safe }},
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    
+    {% if top_reasons %}
+    // Reasons Chart
+    const reasonsCtx = document.getElementById('reasonsChart').getContext('2d');
+    const reasonsChart = new Chart(reasonsCtx, {
+        type: 'pie',
+        data: {
+            labels: [{% for reason, count in top_reasons.items %}'{{ reason }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+            datasets: [{
+                data: [{% for reason, count in top_reasons.items %}{{ count }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(54, 162, 235, 0.7)',
+                    'rgba(255, 206, 86, 0.7)',
+                    'rgba(75, 192, 192, 0.7)',
+                    'rgba(153, 102, 255, 0.7)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true
+        }
+    });
+    {% endif %}
+    
+    {% if ml_score_count > 0 %}
+    // ML Risk Score Distribution Chart
+    const riskScoreCtx = document.getElementById('riskScoreChart').getContext('2d');
+    const riskScoreChart = new Chart(riskScoreCtx, {
+        type: 'doughnut',
+        data: {
+            labels: [{% for category, count in risk_categories.items %}'{{ category }}'{% if not forloop.last %}, {% endif %}{% endfor %}],
+            datasets: [{
+                data: [{% for category, count in risk_categories.items %}{{ count }}{% if not forloop.last %}, {% endif %}{% endfor %}],
+                backgroundColor: [
+                    'rgba(255, 205, 86, 0.7)',  // Yellow for low risk
+                    'rgba(255, 159, 64, 0.7)',  // Orange for medium risk
+                    'rgba(255, 99, 132, 0.7)'   // Red for high risk
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                },
+                title: {
+                    display: true,
+                    text: 'Distribution of ML Risk Scores'
+                }
+            }
+        }
+    });
+    {% endif %}
+</script>
+{% endblock %} 
